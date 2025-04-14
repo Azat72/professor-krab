@@ -1,6 +1,7 @@
 import requests
+import os
 
-API_KEY = "sk-cdaf10fad862474a94007f3d0d5c66a5"
+API_KEY = os.getenv("API_KEY")  # получаем ключ из настроек Streamlit
 API_URL = "https://api.deepseek.com/chat/completions"
 
 def ask_professor_krab(question, chat_history):
@@ -10,13 +11,18 @@ def ask_professor_krab(question, chat_history):
     }
 
     messages = [
-        {"role": "system", "content": "Ты — Профессор КРАБ (КРБ-Аналитика), эксперт в области права. Отвечай чётко, профессионально и с лёгким юмором. Представляйся в начале."}
+        {
+            "role": "system",
+            "content": "Ты — Профессор КРАБ (КРБ-Аналитика), эксперт в области права. Отвечай чётко, профессионально и с лёгким юмором. Представляйся в начале."
+        }
     ]
 
+    # добавляем историю чата
     for msg in chat_history:
         messages.append({"role": "user", "content": msg["user"]})
         messages.append({"role": "assistant", "content": msg["bot"]})
 
+    # добавляем новый вопрос
     messages.append({"role": "user", "content": question})
 
     data = {
